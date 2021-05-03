@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "70392537009",
+    "project_id": "shapeyou-42b8c",
+    "storage_bucket": "shapeyou-42b8c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70392537009:android:f60d8d07e1e359db2b6790",
+        "android_client_info": {
+          "package_name": "com.webdlabs.shapeyou"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70392537009-6532vf8osfquu7qpepd48e930fljtcst.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.webdlabs.shapeyou",
+            "certificate_hash": "6af85f4b3443704c42f06ce620b9a2b3acca4f08"
+          }
+        },
+        {
+          "client_id": "70392537009-0q8t9s5oted8pe6222d40v26378fjfba.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj3_CyuOIp7HvYKvkNDftq40WMikx6joY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "70392537009-0q8t9s5oted8pe6222d40v26378fjfba.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70392537009:android:ae97ebbb7142c8dc2b6790",
+        "android_client_info": {
+          "package_name": "com.webdlabs.vendorapp_mulitvendorapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70392537009-0q8t9s5oted8pe6222d40v26378fjfba.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj3_CyuOIp7HvYKvkNDftq40WMikx6joY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "70392537009-0q8t9s5oted8pe6222d40v26378fjfba.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
