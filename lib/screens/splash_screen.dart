@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendorapp_mulitvendorapp/screens/home_screen.dart';
-import 'package:vendorapp_mulitvendorapp/screens/register_screen.dart';
+import 'package:vendorapp_mulitvendorapp/screens/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
 
@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
         ),(){
       FirebaseAuth.instance.authStateChanges().listen((User user) {
         if (user==null) {
-          Navigator.pushReplacementNamed(context, RegisterScreen.id);
+          Navigator.pushReplacementNamed(context, LoginScreen.id);
         }else{
           Navigator.pushReplacementNamed(context, HomeScreen.id);
         }

@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vendorapp_mulitvendorapp/providers/auth_provider.dart';
 import 'package:vendorapp_mulitvendorapp/screens/home_screen.dart';
+import 'package:vendorapp_mulitvendorapp/screens/login_screen.dart';
 import 'package:vendorapp_mulitvendorapp/screens/register_screen.dart';
 import 'package:vendorapp_mulitvendorapp/screens/splash_screen.dart';
+import 'package:vendorapp_mulitvendorapp/widgets/reset_password_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Provider.debugCheckInvalidValueType = null;
+
   runApp(
     MultiProvider(
       providers: [
@@ -33,6 +36,8 @@ class MyApp extends StatelessWidget {
         SplashScreen.id: (context) => SplashScreen(),
         RegisterScreen.id:(context)=> RegisterScreen(),
         HomeScreen.id:(context)=> HomeScreen(),
+        LoginScreen.id:(context)=>LoginScreen(),
+        ResetPassword.id:(context)=>ResetPassword(),
       },
       debugShowCheckedModeBanner: false,
     );
