@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vendorapp_mulitvendorapp/providers/auth_provider.dart';
+import 'package:vendorapp_mulitvendorapp/providers/product_provider.dart';
+import 'package:vendorapp_mulitvendorapp/screens/add_newproduct_screen.dart';
 import 'package:vendorapp_mulitvendorapp/screens/home_screen.dart';
 import 'package:vendorapp_mulitvendorapp/screens/login_screen.dart';
 import 'package:vendorapp_mulitvendorapp/screens/register_screen.dart';
@@ -17,6 +19,7 @@ void main() async {
     MultiProvider(
       providers: [
           Provider (create: (_) => AuthProvider(),),
+        Provider (create: (_) => ProductProvider(),),
         ],
     child: MyApp(),
     ),
@@ -38,6 +41,7 @@ class MyApp extends StatelessWidget {
         HomeScreen.id:(context)=> HomeScreen(),
         LoginScreen.id:(context)=>LoginScreen(),
         ResetPassword.id:(context)=>ResetPassword(),
+        AddNewProduct.id:(context)=>AddNewProduct(),
       },
       debugShowCheckedModeBanner: false,
     );

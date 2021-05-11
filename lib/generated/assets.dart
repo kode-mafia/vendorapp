@@ -3,6 +3,7 @@ class Assets {
   Assets._();
 
   static const String imagesForgotpass = 'images/forgotpass.png';
+  static const String imagesMeme = 'images/meme.jpg';
   static const String imagesShapeyouLogo = 'images/shapeyou_logo.png';
 
 }
