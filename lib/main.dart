@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:vendorapp_mulitvendorapp/providers/auth_provider.dart';
 import 'package:vendorapp_mulitvendorapp/providers/product_provider.dart';
