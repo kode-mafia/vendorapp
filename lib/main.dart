@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xFF84c225),
         fontFamily: 'Lato',
       ),
+      builder: EasyLoading.init(),
       initialRoute: SplashScreen.id,
       routes: {
         SplashScreen.id: (context) => SplashScreen(),

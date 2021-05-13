@@ -26,6 +26,7 @@ dependencies:
   email_validator: ^1.0.5
   firebase_storage: ^5.2.0
   flutter_slider_drawer: ^1.2.1
+  flutter_easyloading: ^2.2.2
 
 
 

@@ -59,7 +59,7 @@ class _CategoryListState extends State<CategoryList> {
                           ),
                           title: Text(document.data()['name']),
                           onTap: (){
-                            _provider.selectCategory(document.data()['name']);
+                            _provider.selectCategory(document.data()['name'],document.data()['image']);
                             Navigator.pop(context);
                           },
                         );
