@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,10 +8,11 @@ import 'package:image_picker/image_picker.dart';
 class ProductProvider with ChangeNotifier{
   String selectedCategory= 'not selected';
   String selectedsubCategory= 'not selected';
-  String categoryImage= '';
+  String categoryImage;
   File image;
   String pickerError = ' ' ;
-  String shopName;
+  String shopName='';
+  String productUrl='';
 
 
   selectCategory(mainCategory, categoryImage){
@@ -39,14 +39,16 @@ class ProductProvider with ChangeNotifier{
 
     try {
       await _storage
-          .ref('productImage/${this.shopName}$timeStamp').putFile(file);
+          .ref('productImage/${this.shopName}/$timeStamp').putFile(file);
     } on FirebaseException catch (e) {
       print(e.code);
     }
     //now after upload file we need to file url path to save in database
     String downloadURL = await _storage
-        .ref('productImage/${this.shopName}$timeStamp')
+        .ref('productImage/${this.shopName}/$timeStamp')
         .getDownloadURL();
+    this.productUrl=downloadURL;
+    notifyListeners();
     return downloadURL;
   }
 
@@ -74,6 +76,9 @@ class ProductProvider with ChangeNotifier{
             actions: [
               CupertinoDialogAction(
                 child: Text('OK'),
+                onPressed: (){
+                  Navigator.pop(context);
+                },
               ),
             ],
           );
@@ -115,6 +120,8 @@ Future<void>saveProductDataToDb(
        'tax':tax,
        'stockQty':stockQty,
        'lowStockQty':lowStockQty,
+       'productId': timeStamp.toString(),
+       'productImage':this.productUrl,
        'published':false, //keep initial value as false
      });
      this.alertDialog(

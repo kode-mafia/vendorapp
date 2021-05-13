@@ -4,7 +4,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vendorapp_mulitvendorapp/providers/auth_provider.dart';
-import 'package:vendorapp_mulitvendorapp/screens/home_screen.dart';
 import 'package:vendorapp_mulitvendorapp/screens/login_screen.dart';
 
 class RegisterForm extends StatefulWidget {

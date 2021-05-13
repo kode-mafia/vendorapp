@@ -118,7 +118,7 @@ class _SubCategoryListState extends State<SubCategoryList> {
                 }
                 if(snapshot.connectionState== ConnectionState.done){
                   Map<String, dynamic> data = snapshot.data.data();
-                  return Expanded(
+                  return data!=null?Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -160,7 +160,7 @@ class _SubCategoryListState extends State<SubCategoryList> {
                           ),
                         ],
                       )
-                  );
+                  ):Text('No Category Selected');
                 }
                 return Center(child: CircularProgressIndicator(),);
 

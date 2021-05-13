@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vendorapp_mulitvendorapp/screens/add_newproduct_screen.dart';
+import 'package:vendorapp_mulitvendorapp/widgets/published_product.dart';
+import 'package:vendorapp_mulitvendorapp/widgets/unpublised_product.dart';
 
 class ProductScreen extends StatelessWidget {
 
@@ -46,8 +48,8 @@ class ProductScreen extends StatelessWidget {
                            child: Container(
                              child: TabBarView(
                                children: [
-                                 Center(child: Text('Published Products'),),
-                                 Center(child: Text('Unpublished Products'),),
+                                 PublishedProduct(),
+                                 UnPublishedProducts(),
                                ],
                              ),
                            ),
