@@ -89,7 +89,7 @@ class _EditViewProductState extends State<EditViewProduct> {
   @override
   Widget build(BuildContext context) {
     var _provider = Provider.of<ProductProvider>(context);
-    //remove this line from here
+
 
     return Scaffold(
       appBar: AppBar(

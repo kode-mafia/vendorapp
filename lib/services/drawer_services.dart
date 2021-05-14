@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vendorapp_mulitvendorapp/screens/banner_screen.dart';
 import 'package:vendorapp_mulitvendorapp/screens/dashboard_screen.dart';
 import 'package:vendorapp_mulitvendorapp/screens/product_screen.dart';
 
@@ -10,21 +11,12 @@ class DrawerServices {
     if(title=='Product'){
       return ProductScreen();
     }
-    if(title=='Dashboard'){
-      return MainScreen();
+
+    if(title=='Banner'){
+      return BannerScreen();
     }
-    if(title=='Dashboard'){
-      return MainScreen();
-    }
-    if(title=='Dashboard'){
-      return MainScreen();
-    }
-    if(title=='Dashboard'){
-      return MainScreen();
-    }
-    if(title=='Dashboard'){
-      return MainScreen();
-    }
+
+
     return MainScreen();
   }
 }

@@ -80,6 +80,7 @@ var vendorData;
           ),
           sliderItem('Dashboard', Icons.dashboard_outlined),
           sliderItem('Product', Icons.shopping_bag_outlined),
+          sliderItem('Banners', CupertinoIcons.photo),
           sliderItem('Coupons', CupertinoIcons.gift),
           sliderItem('Orders', Icons.favorite),
           sliderItem('Reports', Icons.stacked_bar_chart),
