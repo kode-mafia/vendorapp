@@ -9,7 +9,6 @@ import 'package:vendorapp_mulitvendorapp/widgets/category_list.dart';
 
 class EditViewProduct extends StatefulWidget {
   final String productId;
-
   EditViewProduct({this.productId});
 
   @override

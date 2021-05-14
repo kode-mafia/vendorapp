@@ -607,6 +607,3 @@ class _AddNewProductState extends State<AddNewProduct> {
     );
   }
 }
-
-//add maximum categories using admin and add maximum product using vendor before next video.
-//commend me if you face any errors or problems.
