@@ -27,9 +27,9 @@ class UnPublishedProducts extends StatelessWidget {
               dataRowHeight: 60,
               headingRowColor: MaterialStateProperty.all(Colors.grey[200]),
               columns: [
-                DataColumn(label: Text('Product Name')),
-                DataColumn(label: Text('Image')),
-                DataColumn(label: Text('Actions')),
+                DataColumn(label: Expanded( child: Text('Product '),),),
+                DataColumn(label: Text('Image'),),
+                DataColumn(label: Text('Actions'),),
               ],
               rows:_productDetails(snapshot.data)
             ),
@@ -45,21 +45,33 @@ class UnPublishedProducts extends StatelessWidget {
                 cells: [
                   DataCell(
                     Container(
-                  child: Text(document.data()['productName']),
-                 ),
+                  child:ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Row(
+                      children: [
+                        Expanded(child: Text('Name: ', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),)),
+                        Expanded(child: Text(document.data()['productName'], style: TextStyle(fontSize: 15),)),
+                      ],
+                    ),
+                    subtitle: Row(
+                      children: [
+                        Text(document.data()['SKU: '],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12),),
+                        Text(document.data()['sku'],style: TextStyle(fontSize: 12),),
+                      ],
+                    ),
                   ),
-                  DataCell(
-                      Container(
-                        child: Image.network(document.data()['productImage']),
                       ),
                   ),
                   DataCell(
-                    Container(
-                      child: (document.data()['productImage']),
-                    ),
+                      Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: Image.network(document.data()['productImage']),
+                        ),
+                      ),
                   ),
                   DataCell(
-                    popButton();
+                    popUpButton(document.data()),
                   ),
                 ],
               );
@@ -67,7 +79,49 @@ class UnPublishedProducts extends StatelessWidget {
           }).toList();
           return newList;
   }
-  Widget popUpButton(data){
+  Widget popUpButton(data,{BuildContext context}){
+    FirebaseServices _services =FirebaseServices();
 
+    return PopupMenuButton<String>(
+    onSelected: (String value){
+      if(value=='publish'){
+       _services.publishProduct(
+           id:data['productId'],
+       );
+      }
+      if(value=='delete'){
+      _services.deleteProduct(id:data['productId'],);
+      }
+    },
+    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+      const PopupMenuItem(
+        value: 'publish',
+       child: ListTile(
+         leading: Icon(Icons.check),
+         title: Text('Publish'),
+       )
+  ),
+      const PopupMenuItem(
+          value: 'preview',
+          child: ListTile(
+            leading: Icon(Icons.info_outline),
+            title: Text('Preview'),
+          )
+      ),
+      const PopupMenuItem(
+          value: 'edit',
+          child: ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('Edit Product'),
+          )
+      ),
+      const PopupMenuItem(
+          value: 'delete',
+          child: ListTile(
+            leading: Icon(Icons.delete_outline),
+            title: Text('Delete Product'),
+          )
+      ),
+  ]);
   }
 }

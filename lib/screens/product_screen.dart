@@ -48,7 +48,7 @@ class ProductScreen extends StatelessWidget {
                            child: Container(
                              child: TabBarView(
                                children: [
-                                 PublishedProduct(),
+                                 PublishedProducts(),
                                  UnPublishedProducts(),
                                ],
                              ),
