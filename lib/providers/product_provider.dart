@@ -6,13 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProductProvider with ChangeNotifier{
-  String selectedCategory= 'not selected';
-  String selectedsubCategory= 'not selected';
+  String selectedCategory;
+  String selectedsubCategory;
   String categoryImage;
   File image;
-  String pickerError = ' ' ;
-  String shopName='';
-  String productUrl='';
+  String pickerError ;
+  String shopName;
+  String productUrl;
 
 
   selectCategory(mainCategory, categoryImage){
@@ -28,6 +28,16 @@ class ProductProvider with ChangeNotifier{
 
   getShopName(shopName){
     this.shopName = shopName;
+    notifyListeners();
+  }
+
+  resetProvider(){
+    //reset all the existing data before update next product
+    this.selectedCategory=null;
+    this.selectedsubCategory=null;
+    this.categoryImage=null;
+    this.image=null;
+    this.productUrl=null;
     notifyListeners();
   }
 
@@ -139,3 +149,59 @@ Future<void>saveProductDataToDb(
    return null;
   }
 }
+
+//update product to database
+Future<void>updateProduct(
+    //need to bring these data here from Add product screen
+        {productName,
+      description,
+      productPrice,
+      comparedPrice,
+      collection,
+      brand,
+      sku,
+      color,
+      tax,
+      stockQty,
+      lowStockQty,
+      context,
+      productId,
+      image,
+      category,
+      subCategory,
+      categoryImage,
+    }){
+  var timeStamp=DateTime.now().microsecondsSinceEpoch;
+  CollectionReference _products =  FirebaseFirestore.instance.collection('products');
+  try{
+    _products.doc(productId).update({
+      'productName': productName,
+      'description':description,
+      'price': productPrice,
+      'comparedPrice':comparedPrice,
+      'collection':collection,
+      'brand':brand,
+      'sku':sku,
+      'category':{'MainCategory':category,'subCategory':subCategory, 'categoryImage':this.categoryImage==null? categoryImage:this.caregoryImage},
+      'color':color,
+      'tax':tax,
+      'stockQty':stockQty,
+      'lowStockQty':lowStockQty,
+      'productId': timeStamp.toString(),
+      'productImage':this.productUrl==null?image:this.productUrl,
+    });
+    this.alertDialog(
+      context: context,
+      title: 'SAVE DATA',
+      content: 'Product Details saved successfully',
+    );
+  }catch(e){
+    this.alertDialog(
+      context: context,
+      title: 'SAVE DATA',
+      content: '${e.toString()}',
+    );
+  }
+  return null;
+}
+

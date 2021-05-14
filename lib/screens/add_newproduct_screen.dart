@@ -43,6 +43,7 @@ class _AddNewProductState extends State<AddNewProduct> {
   @override
   Widget build(BuildContext context) {
     var _provider = Provider.of<ProductProvider>(context);
+    _provider.resetProvider();
     return DefaultTabController(
       length: 2,
       initialIndex: 1,//will keep initial index 1 to avoid textfield clearing automatically
