@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
@@ -20,32 +18,35 @@ class EditViewProduct extends StatefulWidget {
 
 class _EditViewProductState extends State<EditViewProduct> {
   FirebaseServices _services = FirebaseServices();
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+
   List<String> _collections = [
-    'Featured Product',
+    'Featured Products',
     'Best Selling',
-    'Recently Added',
+    'Recently Added'
   ];
   String dropdownValue;
+
   var _brandText = TextEditingController();
   var _skuText = TextEditingController();
   var _productNameText = TextEditingController();
-  var _colorNameText = TextEditingController();
+  var _weightText = TextEditingController();
   var _priceText = TextEditingController();
   var _comparedPriceText = TextEditingController();
   var _descriptionText = TextEditingController();
   var _categoryTextController = TextEditingController();
-  var _subcategoryTextController = TextEditingController();
+  var _subCategoryTextController = TextEditingController();
   var _stockTextController = TextEditingController();
-  var _lowstockTextController = TextEditingController();
+  var _lowStockTextController = TextEditingController();
   var _taxTextController = TextEditingController();
-  bool _visible = false;
+
   DocumentSnapshot doc;
   double discount;
   String image;
-  File _image;
   String categoryImage;
-  bool _editing=true; //now can't edit only view
+  File _image;
+  bool _visible = false;
+  bool _editing= true; //now cannot edit . only can view
 
   @override
   void initState() {
@@ -59,26 +60,26 @@ class _EditViewProductState extends State<EditViewProduct> {
         .get()
         .then((DocumentSnapshot document) {
       if (document.exists) {
-        doc = document;
         setState(() {
+          doc = document;
           _brandText.text = document.data()['brand'];
           _skuText.text = document.data()['sku'];
           _productNameText.text = document.data()['productName'];
-          _colorNameText.text = document.data()['color'];
+          _weightText.text = document.data()['weight'];
           _priceText.text = document.data()['price'].toString();
-          _priceText.text = document.data()['comparedPrice'].toString();
-          discount = ((double.parse(_priceText.text) /
-                  int.parse(_comparedPriceText.text)) *
-              100);
+          _comparedPriceText.text = document.data()['comparedPrice'].toString();
+          var difference =  int.parse(_comparedPriceText.text) - double.parse(_priceText.text);
+          discount = (difference / int.parse(_comparedPriceText.text) * 100);
           image = document.data()['productImage'];
+          _descriptionText.text = document.data()['description'];
           _categoryTextController.text =
-              document.data()['category']['mainCategory'];
-          _subcategoryTextController.text =
-              document.data()['category']['subCategory'];
+          document.data()['category']['mainCategory'];
+          _subCategoryTextController.text =
+          document.data()['category']['subCategory'];
           dropdownValue = document.data()['collection'];
           _stockTextController.text = document.data()['stockQty'].toString();
-          _lowstockTextController.text =
-              document.data()['lowstockQty'].toString();
+          _lowStockTextController.text =
+              document.data()['lowStockQty'].toString();
           _taxTextController.text = document.data()['tax'].toString();
           categoryImage = document.data()['categoryImage'];
         });
@@ -89,12 +90,13 @@ class _EditViewProductState extends State<EditViewProduct> {
   @override
   Widget build(BuildContext context) {
     var _provider = Provider.of<ProductProvider>(context);
+    //remove this line from here
 
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
           //to make back button white
-          color: Colors.white,
+            color: Colors.white
         ),
         actions: [
           FlatButton(
@@ -104,7 +106,7 @@ class _EditViewProductState extends State<EditViewProduct> {
                 _editing=false;
               });
             },
-          )
+          ),
         ],
       ),
       bottomSheet: Container(
@@ -113,16 +115,17 @@ class _EditViewProductState extends State<EditViewProduct> {
           children: [
             Expanded(
               child: InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
                 child: Container(
                   color: Colors.black87,
                   child: Center(
-                      child: Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.white),
-                  )),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -130,64 +133,73 @@ class _EditViewProductState extends State<EditViewProduct> {
               child: AbsorbPointer(
                 absorbing: _editing,
                 child: InkWell(
-                  onTap: (){
-                      if(_formkey.currentState.validate()){
-                        EasyLoading.show(status:'Saving.....');
-                        if(_image!=null){
-                          //first upload new image and save data
-                          _provider.uploadProductImage(_image.path, _productNameText.text).then((url){
-                            if(url!=null){
-                              EasyLoading.dismiss();
-                              _provider.updateProduct(
-                                context: context,
-                                productName: _productNameText.text,
-                                color: _colorNameText.text,
-                                tax: double.parse(_taxTextController.text),
-                                stockQty: int.parse(_stockTextController.text),
-                                sku: _skuText.text,
-                                price: double.parse(_priceText.text),
-                                lowStockQty: int.parse(_lowstockTextController.text),
-                                description: _descriptionText.text,
-                                collection: dropdownValue,
-                                brand: _brandText.text,
-                                comparedPrice: int.parse(_comparedPriceText.text),
-                                productId: widget.productId,
-                                image: image,
-                                category: _categoryTextController,
-                                subCategory: _subcategoryTextController.text,
-                                categoryImage: categoryImage,
-                              );
-                            }
-                          });
-                        }else{
-                          //no need to change image, so just save new data, no need to upload
-                          _provider.updateProduct(
+                  onTap: () {
+                    if (_formKey.currentState.validate()) {
+                      EasyLoading.show(status: 'Saving...');
+                      if (_image != null) {
+                        //first upload new image and save data
+                        _provider
+                            .uploadProductImage(
+                            _image.path, _productNameText.text)
+                            .then((url) {
+                          if (url != null) {
+                            EasyLoading.dismiss();
+                            _provider.updateProduct(
+                              context: context,
+                              productName: _productNameText.text,
+                              weight: _weightText.text,
+                              tax: double.parse(_taxTextController.text),
+                              stockQty: int.parse(_stockTextController.text),
+                              sku: _skuText.text,
+                              price: double.parse(_priceText.text),
+                              lowStockQty:
+                              int.parse(_lowStockTextController.text),
+                              description: _descriptionText.text,
+                              collection: dropdownValue,
+                              brand: _brandText.text,
+                              comparedPrice: int.parse(_comparedPriceText.text),
+                              productId: widget.productId,
+                              image: image,
+                              category: _categoryTextController.text,
+                              subCategory: _subCategoryTextController.text,
+                              categoryImage: categoryImage,
+                            );
+                          }
+                        });
+                      } else {
+                        //no need to change image, so just save new data. no need to upload image
+                        _provider.updateProduct(
                             context: context,
                             productName: _productNameText.text,
-                            color: _colorNameText.text,
+                            weight: _weightText.text,
                             tax: double.parse(_taxTextController.text),
                             stockQty: int.parse(_stockTextController.text),
                             sku: _skuText.text,
                             price: double.parse(_priceText.text),
-                            lowStockQty: int.parse(_lowstockTextController.text),
+                            lowStockQty: int.parse(_lowStockTextController.text),
                             description: _descriptionText.text,
                             collection: dropdownValue,
                             brand: _brandText.text,
                             comparedPrice: int.parse(_comparedPriceText.text),
                             productId: widget.productId,
                             image: image,
-                            category: _categoryTextController,
-                            subCategory: _subcategoryTextController.text,
-                            categoryImage: categoryImage,
-                          );
-                          EasyLoading.dismiss();
-                        }
+                            category: _categoryTextController.text,
+                            subCategory: _subCategoryTextController.text,
+                            categoryImage: categoryImage);
+                        EasyLoading.dismiss();
                       }
+                      _provider.resetProvider();
+                      //reset only after saving completed
+                    }
                   },
                   child: Container(
                     color: Colors.pinkAccent,
                     child: Center(
-                        child: Text('Save', style: TextStyle(color: Colors.white))),
+                      child: Text(
+                        'Save',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -198,352 +210,365 @@ class _EditViewProductState extends State<EditViewProduct> {
       body: doc == null
           ? Center(child: CircularProgressIndicator())
           : Form(
-              key: _formkey,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView(
+        key: _formKey,
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: ListView(
+            children: [
+              AbsorbPointer(
+                absorbing: _editing,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AbsorbPointer(
-                      absorbing: _editing,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 30,
+                          child: TextFormField(
+                            controller: _brandText,
+                            decoration: InputDecoration(
+                              contentPadding:
+                              EdgeInsets.only(left: 10, right: 10),
+                              hintText: 'Brand',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: OutlineInputBorder(),
+                              filled: true,
+                              fillColor: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(.1),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('SKU : '),
+                            Container(
+                              width: 50,
+                              child: TextFormField(
+                                controller: _skuText,
+                                style: TextStyle(fontSize: 12),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.zero,
+                            border: InputBorder.none),
+                        controller: _productNameText,
+                        style: TextStyle(fontSize: 30),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.zero,
+                            border: InputBorder.none),
+                        controller: _weightText,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 80,
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.zero,
+                              border: InputBorder.none,
+                              prefixText: '\$',
+                            ),
+                            controller: _priceText,
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                        Container(
+                          width: 80,
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.zero,
+                              border: InputBorder.none,
+                              prefixText: '\$',
+                            ),
+                            controller: _comparedPriceText,
+                            style: TextStyle(
+                                fontSize: 15,
+                                decoration: TextDecoration.lineThrough),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3),
+                            color: Colors.red,
+                          ),
+                          child: Padding(
+                            padding:
+                            const EdgeInsets.only(left: 8, right: 8),
+                            child: Text(
+                              '${discount.toStringAsFixed(0)}% OFF',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Inclusive of all Taxes',
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        _provider.getProductImage().then((image) {
+                          setState(() {
+                            _image = image;
+                          });
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: _image != null
+                            ? Image.file(
+                          _image,
+                          height: 300,
+                        )
+                            : Image.network(
+                          image,
+                          height: 300,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'About this product',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: TextFormField(
+                        maxLines: null,
+                        controller: _descriptionText,
+                        keyboardType: TextInputType.multiline,
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        decoration:
+                        InputDecoration(border: InputBorder.none),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 10),
+                      child: Row(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                width: 80,
-                                height: 40,
-                                child: TextFormField(
-                                  controller: _brandText,
-                                  decoration: InputDecoration(
-                                    contentPadding:
-                                        EdgeInsets.only(left: 10, right: 10),
-                                    hintText: 'Brand',
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    border: OutlineInputBorder(),
-                                    filled: true,
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text('SKU'),
-                                  Container(
-                                    width: 50,
-                                    child: TextFormField(
-                                      controller: _skuText,
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.zero,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
+                          Text(
+                            'Category',
+                            style:
+                            TextStyle(color: Colors.grey, fontSize: 16),
                           ),
                           SizedBox(
-                            height: 20,
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.zero,
-                                border: InputBorder.none,
-                              ),
-                              controller: _productNameText,
-                              style: TextStyle(fontSize: 12),
-                            ),
+                            width: 10,
                           ),
-                          SizedBox(
-                            height: 40,
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.zero,
-                                border: InputBorder.none,
-                              ),
-                              controller: _colorNameText,
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 80,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.zero,
-                                    border: InputBorder.none,
-                                    prefixText: '\$',
-                                  ),
-                                  controller: _priceText,
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                              ),
-                              Container(
-                                width: 80,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.zero,
-                                    border: InputBorder.none,
-                                    prefixText: '\$',
-                                  ),
-                                  controller: _comparedPriceText,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      decoration: TextDecoration.lineThrough),
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3),
-                                  color: Colors.red,
-                                ),
-                                child: Text(
-                                  '${discount.toStringAsFixed(0)}% OFF',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            'Inclusive of all Taxes',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          InkWell(
-                            onTap: (){
-                              _provider.getProductImage().then((image){
-                                setState(() {
-                                  _image = image;
-                                });
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: _image != null ? Image.file(_image, height: 300,) : Image.network(image, height: 300,),),
-                          ),
-                          Text(
-                            'About this Product',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              maxLines: null,
-                              controller: _descriptionText,
-                              keyboardType: TextInputType.multiline,
-                              style: TextStyle(color: Colors.grey),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 20,
-                              bottom: 10,
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Category',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: AbsorbPointer(
-                                    absorbing: true,
-                                    //this will block user entering category name manually
-                                    child: TextFormField(
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Select a category';
-                                        }
-                                        return null;
-                                      },
-                                      controller: _categoryTextController,
-                                      decoration: InputDecoration(
-                                        hintText: 'Not Selected',
-                                        //item code
-                                        labelStyle: TextStyle(color: Colors.grey),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Colors.grey[300],
-                                          ),
-                                        ),
-                                      ),
+                          Expanded(
+                            child: AbsorbPointer(
+                              absorbing: true,
+                              //this will block user entering category name manually
+                              child: TextFormField(
+                                controller: _categoryTextController,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Select Category name';
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  hintText: 'not selected',
+                                  //Item code
+                                  labelStyle: TextStyle(color: Colors.grey),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.grey[300],
                                     ),
                                   ),
                                 ),
-                                IconButton(
-                                  icon: Icon(Icons.edit_outlined),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return CategoryList();
-                                        }).whenComplete(() {
-                                      setState(() {
-                                        _categoryTextController.text =
-                                            _provider.selectedCategory;
-                                        _visible = true;
-                                      });
-                                    });
-                                  },
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                           Visibility(
-                            visible: _visible,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 10, bottom: 20),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Sub Category',
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 16),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: AbsorbPointer(
-                                      absorbing: true,
-                                      child: TextFormField(
-                                        validator: (value) {
-                                          if (value.isEmpty) {
-                                            return 'Select a sub category';
-                                          }
-                                          return null;
-                                        },
-                                        controller: _subcategoryTextController,
-                                        decoration: InputDecoration(
-                                          hintText: 'Not Selected',
-                                          //item code
-                                          labelStyle:
-                                              TextStyle(color: Colors.grey),
-                                          enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Colors.grey[300],
-                                            ),
-                                          ),
-                                        ),
+                            visible: _editing ? false : true,
+                            child: IconButton(
+                              icon: Icon(Icons.edit_outlined),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return CategoryList();
+                                    }).whenComplete(() {
+                                  setState(() {
+                                    _categoryTextController.text =
+                                        _provider.selectedCategory;
+                                    _visible = true;
+                                  });
+                                });
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: _visible,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 20),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Sub Category',
+                              style: TextStyle(
+                                  color: Colors.grey, fontSize: 16),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: AbsorbPointer(
+                                absorbing: true,
+                                child: TextFormField(
+                                  controller: _subCategoryTextController,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Select Sub Category name';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: 'not selected',
+                                    //Item code
+                                    labelStyle:
+                                    TextStyle(color: Colors.grey),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.grey[300],
                                       ),
                                     ),
                                   ),
-                                  Visibility(
-                                    visible: _editing?false:true,
-                                    child: IconButton(
-                                      icon: Icon(Icons.edit_outlined),
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return SubCategoryList();
-                                            }).whenComplete(() {
-                                          setState(() {
-                                            _subcategoryTextController.text =
-                                                _provider.selectedsubCategory;
-                                          });
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
+                            IconButton(
+                              icon: Icon(Icons.edit_outlined),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return SubCategoryList();
+                                    }).whenComplete(() {
+                                  setState(() {
+                                    _subCategoryTextController.text =
+                                        _provider.selectedSubCategory;
+                                  });
+                                });
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          Text(
+                            'Collection',
+                            style: TextStyle(color: Colors.grey),
                           ),
-                          Container(
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Collection',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                DropdownButton<String>(
-                                  hint: Text('Select Collection'),
-                                  value: dropdownValue,
-                                  icon: Icon(Icons.arrow_drop_down),
-                                  onChanged: (String value) {
-                                    setState(() {
-                                      dropdownValue = value;
-                                    });
-                                  },
-                                  items: _collections
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ),
+                          SizedBox(
+                            width: 10,
                           ),
-                          Row(
-                            children: [
-                              Text('Stock: '),
-                              Expanded(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.zero,
-                                    border: InputBorder.none,
-                                  ),
-                                  controller: _stockTextController,
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text('Low Stock: '),
-                              Expanded(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.zero,
-                                    border: InputBorder.none,
-                                  ),
-                                  controller: _lowstockTextController,
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text('Tax %'),
-                              Expanded(
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.zero,
-                                    border: InputBorder.none,
-                                  ),
-                                  controller: _taxTextController,
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ),
-                            ],
+                          DropdownButton<String>(
+                            hint: Text('Select Collection'),
+                            value: dropdownValue,
+                            icon: Icon(Icons.arrow_drop_down),
+                            onChanged: (String value) {
+                              setState(() {
+                                dropdownValue = value;
+                              });
+                            },
+                            items: _collections
+                                .map<DropdownMenuItem<String>>(
+                                    (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
                           ),
                         ],
                       ),
-                    )
+                    ),
+                    Row(
+                      children: [
+                        Text('Stock :'),
+                        Expanded(
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none),
+                            controller: _stockTextController,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('Low Stock :'),
+                        Expanded(
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none),
+                            controller: _lowStockTextController,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('Tax %:'),
+                        Expanded(
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none),
+                            controller: _taxTextController,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 60,)
                   ],
                 ),
-              ),
-            ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
+
+//next will give vendor option to add vendors own banner images
+
+
