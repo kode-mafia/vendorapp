@@ -100,6 +100,7 @@ var vendorData;
                      ),
                    ),
                  ),
+
                 child: SizedBox(
                   height: 40,
                   child: Padding(

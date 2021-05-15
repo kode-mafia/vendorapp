@@ -4,8 +4,6 @@ import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:vendorapp_mulitvendorapp/services/drawer_services.dart';
 import 'package:vendorapp_mulitvendorapp/widgets/drawer_menu_widget.dart';
 
-import 'dashboard_screen.dart';
-
 class HomeScreen extends StatefulWidget {
   static const String id = 'home-screen';
 

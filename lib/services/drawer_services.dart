@@ -3,19 +3,20 @@ import 'package:vendorapp_mulitvendorapp/screens/banner_screen.dart';
 import 'package:vendorapp_mulitvendorapp/screens/dashboard_screen.dart';
 import 'package:vendorapp_mulitvendorapp/screens/product_screen.dart';
 
-class DrawerServices {
+
+class DrawerServices{
+
   Widget drawerScreen(title){
-    if(title=='Dashboard'){
+    if(title == 'Dashboard'){
       return MainScreen();
     }
-    if(title=='Product'){
+    if(title == 'Product'){
       return ProductScreen();
     }
 
-    if(title=='Banner'){
+    if(title == 'Banner'){
       return BannerScreen();
     }
-
 
     return MainScreen();
   }

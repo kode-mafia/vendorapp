@@ -104,7 +104,7 @@ class PublishedProducts extends StatelessWidget {
     return PopupMenuButton<String>(
         onSelected: (String value){
           if(value=='unpublish'){
-            _services.unpublishProduct(
+            _services.unPublishProduct(
               id:data['productId'],
             );
           }

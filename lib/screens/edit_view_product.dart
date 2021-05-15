@@ -9,6 +9,7 @@ import 'package:vendorapp_mulitvendorapp/widgets/category_list.dart';
 
 class EditViewProduct extends StatefulWidget {
   final String productId;
+
   EditViewProduct({this.productId});
 
   @override
@@ -89,7 +90,7 @@ class _EditViewProductState extends State<EditViewProduct> {
   @override
   Widget build(BuildContext context) {
     var _provider = Provider.of<ProductProvider>(context);
-
+    //remove this line from here
 
     return Scaffold(
       appBar: AppBar(
