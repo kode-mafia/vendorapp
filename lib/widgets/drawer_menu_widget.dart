@@ -14,30 +14,33 @@ class MenuWidget extends StatefulWidget {
   _MenuWidgetState createState() => _MenuWidgetState();
 }
 
+
 class _MenuWidgetState extends State<MenuWidget> {
 
   User user = FirebaseAuth.instance.currentUser;
-var vendorData;
+  var vendorData;
 
   @override
   void initState() {
-  getVendorData();
+    getVendorData();
     super.initState();
   }
 
   Future<DocumentSnapshot>getVendorData()async{
+
     var result = await FirebaseFirestore.instance.collection('vendors').doc(user.uid).get();
-     setState(() {
-       vendorData=result;
-     });
-     return result;
+
+    setState(() {
+      vendorData = result;
+    });
+
+    return result;
   }
 
   @override
   Widget build(BuildContext context) {
     var _provider = Provider.of<ProductProvider>(context);
-     _provider.getShopName(vendorData != null ?vendorData.data()['shopName']:'');
-
+    _provider.getShopName(vendorData !=null ? vendorData.data()['shopName']: '');
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.only(top: 30),
@@ -54,37 +57,35 @@ var vendorData;
                 children: [
                   CircleAvatar(
                     radius: 32,
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Colors.grey,
                     child: CircleAvatar( //shop picture
                       radius: 30,
-                      backgroundImage: NetworkImage(vendorData!=null?vendorData.data()['ImageUrl']:null,),
+                      backgroundImage: vendorData!=null ? NetworkImage(vendorData.data()['ImageUrl']): null,
                     ),
                   ),
-
                   SizedBox(width: 10,),
-
                   Text(
-                    vendorData!=null?vendorData.data()['shopName']:'Shop Name',
+                    vendorData!=null ? vendorData.data()['shopName'] : 'Shop Name', //will display shop name here later
                     style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        fontFamily: 'BalsamiqSans'),
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,),
                   ),
+
                 ],
               ),
             ),
           ),
           SizedBox(
-            width: 10,
+            height: 10,
           ),
           sliderItem('Dashboard', Icons.dashboard_outlined),
           sliderItem('Product', Icons.shopping_bag_outlined),
-          sliderItem('Banners', CupertinoIcons.photo),
+          sliderItem('Banner', CupertinoIcons.photo),
           sliderItem('Coupons', CupertinoIcons.gift),
-          sliderItem('Orders', Icons.favorite),
+          sliderItem('Orders', Icons.list_alt_outlined),
           sliderItem('Reports', Icons.stacked_bar_chart),
-          sliderItem('Setting', Icons.settings),
+          sliderItem('Setting', Icons.settings_outlined),
           sliderItem('LogOut', Icons.arrow_back_ios)
         ],
       ),
@@ -92,31 +93,31 @@ var vendorData;
   }
 
   Widget sliderItem(String title, IconData icons) => InkWell(
-              child: Container(
-                 decoration: BoxDecoration(
-                   border: Border(
-                     bottom: BorderSide(
-                       color: Colors.grey[300],
-                     ),
-                   ),
-                 ),
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                    color: Colors.grey[300]
+                )
+            )
+        ),
+        child: SizedBox(
+          height: 40,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Row(
+              children: [
+                Icon(icons,color: Colors.black54,size: 18,),
+                SizedBox(width: 10,),
+                Text(title,style: TextStyle(color: Colors.black54,fontSize: 12),)
+              ],
+            ),
+          ),
+        ),
+      ),
+      onTap: () {
+        widget.onItemClick(title);
 
-                child: SizedBox(
-                  height: 40,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Row(
-                      children: [
-                        Icon(icons, color: Colors.blueGrey, size: 18,),
-                        SizedBox(width: 10,),
-                        Text(title, style: TextStyle(color: Colors.black,fontSize: 12),),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-             onTap: () {
-                  widget.onItemClick(title);
-             }
-            );
+      }
+  );
 }

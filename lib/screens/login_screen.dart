@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:vendorapp_mulitvendorapp/providers/auth_provider.dart';
 import 'package:vendorapp_mulitvendorapp/screens/home_screen.dart';
 import 'package:vendorapp_mulitvendorapp/screens/register_screen.dart';
-import 'package:vendorapp_mulitvendorapp/widgets/reset_password_screen.dart';
+import 'package:vendorapp_mulitvendorapp/screens/reset_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login-screen';
