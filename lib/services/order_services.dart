@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vendorapp_mulitvendorapp/widgets/delivery_boys_list.dart';
+
 class OrderServices {
   CollectionReference orders = FirebaseFirestore.instance.collection('orders');
 
@@ -33,6 +34,7 @@ class OrderServices {
 
     return Colors.orange;
   }
+
 
   Widget statusContainer(document, context) {
     if(document.data()['deliveryBoy']['name'].length>1){
@@ -184,8 +186,6 @@ class OrderServices {
 
 
 
-
-
   showMyDialog(title, status, documentId, context) {
     OrderServices _orderServices = OrderServices();
     showCupertinoDialog(
@@ -195,6 +195,7 @@ class OrderServices {
             title: Text(title),
             content: Text('Are you sure ? '),
             actions: [
+
               TextButton(
                 child: Text(
                   'OK',
@@ -202,6 +203,7 @@ class OrderServices {
                       color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.bold),
                 ),
+
                 onPressed: () {
                   EasyLoading.show(status: 'Updating status');
                   status == 'Accepted'
@@ -228,7 +230,7 @@ class OrderServices {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-              )
+              ),
             ],
           );
         });

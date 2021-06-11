@@ -31,9 +31,6 @@ class _OrderScreenState extends State<OrderScreen> {
 
   DocumentSnapshot _customerData;
 
-
-
-
   @override
   Widget build(BuildContext context) {
     var _orderProvider = Provider.of<OrderProvider>(context);
@@ -53,6 +50,7 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
             ),
           ),
+
           Container(
             height: 56,
             width: MediaQuery.of(context).size.width,
@@ -99,7 +97,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   return Center(
                     child: Text(tag > 0
                         ? 'No ${options[tag]} orders'
-                        : 'No Orders. Continue shopping'),
+                        : 'No Orders. Please Engage Customers.'),
                   );
                 }
 
@@ -125,4 +123,4 @@ class _OrderScreenState extends State<OrderScreen> {
 
 }
 
-//open vendor app
+

@@ -100,9 +100,6 @@ class _OrderSummaryCardState extends State<OrderSummaryCard> {
               style: TextStyle(fontSize: 12),
               maxLines: 1,
             ),
-
-
-
             trailing:  InkWell(
               onTap: () {
                 _orderServices.launchCall('tel:${_customer.data()['number']}');
@@ -131,7 +128,7 @@ class _OrderSummaryCardState extends State<OrderSummaryCard> {
               style: TextStyle(fontSize: 10, color: Colors.black),
             ),
             subtitle: Text(
-              'View order details',
+              'View Order details',
               style: TextStyle(fontSize: 12, color: Colors.grey),
             ),
             children: [
@@ -263,11 +260,6 @@ class _OrderSummaryCardState extends State<OrderSummaryCard> {
   }
 }
 
-//Hi, now vendors can accept the orders from customer and can select a delivery boy
-//which is nearest to the store. Now we will open delivery boy app,
-//so delivery boy can see the assigned orders and can pick up order and deliver
 
-
-//open deliery app
 
 
